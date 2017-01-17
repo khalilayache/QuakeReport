@@ -8,3 +8,4 @@
 build/intermediates/dex-cache/cache.xml
 .idea/workspace.xml
 app/app.iml
+.idea/
