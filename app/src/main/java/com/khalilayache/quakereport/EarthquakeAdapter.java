@@ -146,4 +146,7 @@ public class EarthquakeAdapter  extends ArrayAdapter<Earthquake>{
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
         return dateFormat.format(date);
     }
+
+
+
 }

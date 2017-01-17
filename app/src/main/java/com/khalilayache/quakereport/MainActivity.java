@@ -1,41 +1,53 @@
 package com.khalilayache.quakereport;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String LOG_TAG = MainActivity.class.getName();
+    private static  final String USGS_REQUEST_URL = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson" +
+            "&orderby=time&minmag=6&limit=10";
+    private EarthquakeAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Create a fake list of earthquake locations.
-         /* ArrayList<Earthquake> earthquakes = new ArrayList<>();
-        earthquakes.add(new Earthquake("7.2","San Francisco","Feb 2,2016"));
-        earthquakes.add(new Earthquake("6.1","London","July 20, 2015"));
-        earthquakes.add(new Earthquake("3.9","Tokyo","Nov 10, 2014"));
-        earthquakes.add(new Earthquake("5.4","Mexico City","May 3, 2014"));
-        earthquakes.add(new Earthquake("2.8","Moscow","Jan 31,2013"));
-        earthquakes.add(new Earthquake("4.9","Rio de Janeiro","Aug 19, 2012"));
-        earthquakes.add(new Earthquake("1.6","Paris","Oct 30, 2011")); */
-
-
-        ArrayList<Earthquake> earthquakes =  QueryUtils.extractEarthquakes();
-        // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
 
-        // Create a new {@link ArrayAdapter} of earthquakes
-        EarthquakeAdapter adapter = new EarthquakeAdapter(this, earthquakes);
+         adapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
 
-        // Set the adapter on the {@link ListView}
-        // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
+
+        EarthquakeAsyncTask task = new EarthquakeAsyncTask();
+        task.execute(USGS_REQUEST_URL);
+    }
+    private class EarthquakeAsyncTask extends AsyncTask<String, Void, List<Earthquake>>{
+
+        @Override
+        protected List<Earthquake> doInBackground(String... urls) {
+            if(urls.length < 1 || urls[0] == null){
+                return null;
+            }
+
+            return QueryUtils.fetchEarthquakeData(urls[0]);
+        }
+
+        @Override
+        protected void onPostExecute(List<Earthquake> earthquakes) {
+           adapter.clear();
+
+            if(earthquakes != null & !earthquakes.isEmpty()){
+                adapter.addAll(earthquakes);
+            }
+
+            
+        }
     }
 }
