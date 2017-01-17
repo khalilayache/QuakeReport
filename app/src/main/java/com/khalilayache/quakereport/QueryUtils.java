@@ -34,14 +34,10 @@ public final class QueryUtils {
 
         ArrayList<Earthquake> earthquakes = new ArrayList<>();
 
-
-
         try{
 
             JSONObject root = new JSONObject(SAMPLE_JSON_RESPONSE);
-            JSONArray features = root.getJSONArray("Feature");
-            Date date;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM DD, yyyy h:mm a");
+            JSONArray features = root.getJSONArray("features");
 
             for(int i = 0; i < features.length(); i++){
 
@@ -50,7 +46,8 @@ public final class QueryUtils {
                 double mag = properties.getDouble("mag");
                 String place = properties.getString("place");
                 long time = properties.getLong("time");
-                earthquakes.add(new Earthquake(mag,place,time));
+                String url = properties.getString("url");
+                earthquakes.add(new Earthquake(mag,place,time,url));
 
             }
         }catch (JSONException e){

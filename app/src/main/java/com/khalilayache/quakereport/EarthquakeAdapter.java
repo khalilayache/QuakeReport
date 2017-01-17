@@ -2,7 +2,9 @@ package com.khalilayache.quakereport;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -41,7 +43,7 @@ public class EarthquakeAdapter  extends ArrayAdapter<Earthquake>{
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.earthquake_list_item,parent, false);
         }
-        Earthquake currentEarthquake = getItem(position);
+        final Earthquake currentEarthquake = getItem(position);
 
         TextView magnitudeView = (TextView) listItemView.findViewById(R.id.magnitude);
         magnitudeView.setText(formatMag(currentEarthquake.getMagnitude()));
@@ -75,6 +77,17 @@ public class EarthquakeAdapter  extends ArrayAdapter<Earthquake>{
         TextView timeView = (TextView) listItemView.findViewById(R.id.time);
         String formattedTime = formatTime(date);
         timeView.setText(formattedTime);
+
+
+
+        listItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent  =  new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(currentEarthquake.getUrl()));
+                getContext().startActivity(intent);
+            }
+        });
 
         return listItemView;
     }

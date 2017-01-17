@@ -4,3 +4,7 @@
 .gradle/2.14.1/taskArtifacts/fileSnapshots.bin
 .gradle/2.14.1/taskArtifacts/fileSnapshotsToTreeSnapshotsIndex.bin
 .gradle/2.14.1/taskArtifacts/taskArtifacts.bin
+.gradle/
+build/intermediates/dex-cache/cache.xml
+.idea/workspace.xml
+app/app.iml
