@@ -1,5 +1,8 @@
 package com.khalilayache.quakereport;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.app.LoaderManager;
@@ -38,6 +41,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
 
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
@@ -47,11 +54,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         earthquakeListView.setAdapter(adapter);
         earthquakeListView.setEmptyView(mEmptyStateTextView);
 
-        LoaderManager loaderManager = getLoaderManager();
 
-        loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
-        Log.i("MainAc QuakeReport Log", "onCreate() initLoader done");
+        if(networkInfo != null && networkInfo.isConnected()) {
+            LoaderManager loaderManager = getLoaderManager();
 
+            loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+            Log.i("MainAc QuakeReport Log", "onCreate() initLoader done");
+        }else{
+            View  loadingIndicator = findViewById(R.id.loading_indicator);
+            loadingIndicator.setVisibility(View.GONE);
+
+            mEmptyStateTextView.setText(R.string.no_connection);
+        }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
