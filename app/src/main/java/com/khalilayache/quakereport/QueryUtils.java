@@ -131,6 +131,14 @@ public final class QueryUtils {
     }
 
     public static List<Earthquake> fetchEarthquakeData (String requestURL){
+
+        //Log.i("MainAc QuakeReport Log", "fetchEarthquakeData() ");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         URL url =  createURL(requestURL);
 
         String jsonResponse = null;
